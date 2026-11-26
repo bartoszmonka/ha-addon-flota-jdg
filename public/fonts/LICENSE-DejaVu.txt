@@ -1,0 +1,4 @@
+DejaVu Sans (podzbiór znaków Latin + Latin Extended-A, używany do eksportu PDF z polskimi znakami).
+Fonts are (c) Bitstream (see below). DejaVu changes are in public domain.
+Bitstream Vera Fonts Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved.
+Licencja: https://dejavu-fonts.github.io/License.html – pozwala na swobodne używanie, kopiowanie i rozpowszechnianie.

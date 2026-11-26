@@ -1,0 +1,21 @@
+name: Flota JDG
+version: "1.0.0"
+slug: flota_jdg
+description: Ewidencja przebiegu pojazdu (VAT-26) z danymi aut z Home Assistanta
+url: https://github.com/bartoszmonka/ha-addon-flota-jdg
+arch:
+  - amd64
+  - aarch64
+image: ghcr.io/bartoszmonka/ha-addon-flota-jdg
+startup: application
+boot: auto
+ingress: true
+ingress_port: 3000
+panel_icon: mdi:car
+panel_title: Flota JDG
+panel_admin: false
+homeassistant_api: true
+options:
+  ha_vehicle_prefixes: audi
+schema:
+  ha_vehicle_prefixes: str

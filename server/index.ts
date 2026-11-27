@@ -7,6 +7,7 @@ import type { WriteOp } from './store.ts';
 import { authConfigured, authorizeUrl, consumeState, devMode, dropSession, loginWithCode, newSession, sessionUser } from './auth.ts';
 import type { SessionUser } from './auth.ts';
 import { haRouter } from './ha.ts';
+import { startTripTracker, tripsRouter } from './trips.ts';
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
@@ -155,6 +156,7 @@ app.get('/api/poll', (req, res) => {
 });
 
 app.use('/api/ha', haRouter(requireUser));
+app.use('/api/trips', tripsRouter(requireUser));
 
 app.use('/api', (_req, res) => res.status(404).json({ error: 'Nie znaleziono.' }));
 
@@ -165,4 +167,5 @@ if (fs.existsSync(dist)) {
   app.get('*', (_req, res) => res.sendFile(path.join(dist, 'index.html')));
 }
 
+startTripTracker();
 app.listen(PORT, '0.0.0.0', () => console.log(`Flota JDG nasłuchuje na :${PORT} (auth: ${ADDON ? 'ingress Home Assistanta' : devMode ? 'DEV' : authConfigured ? 'Home Assistant' : 'brak konfiguracji'})`));

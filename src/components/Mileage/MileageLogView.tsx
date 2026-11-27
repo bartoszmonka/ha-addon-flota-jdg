@@ -35,6 +35,7 @@ import { PageHeader } from '../ui/PageHeader';
 import { Badge } from '../ui/Badge';
 import { Dropdown } from '../ui/Dropdown';
 import { EntryForm } from './EntryForm';
+import { PendingTrips } from './PendingTrips';
 import { BulkAddPanel } from './BulkAddPanel';
 import { useConfirm } from '../ui/ConfirmDialog';
 import { daysOfMonth, holidayName, weekdayName, weekdayOf } from '../../lib/calendar';
@@ -121,9 +122,12 @@ export const MileageLogView: React.FC = () => {
   const totalMonthDistance = ledger?.totalDistanceKm ?? 0;
   const monthIssues = validationIssues.filter((i) => i.monthKey === currentMonthKey);
   const lastEntry = validEntries[validEntries.length - 1];
-  // km, które licznik (z Home Assistant) przejechał ponad ostatni wpis ewidencji
+  // km z licznika (Home Assistant), których nie obejmuje żaden wpis ewidencji – odrzucenie dymka tego nie zmienia
+  const assignedKm = validEntries.reduce((a, e) => a + (e.distanceKm || 0), 0);
   const unassignedKm =
-    haLive?.odometerKm != null && lastEntry ? Math.max(0, Math.round(haLive.odometerKm - lastEntry.odometerEnd)) : null;
+    haLive?.odometerKm != null && validEntries.length
+      ? Math.max(0, Math.round(haLive.odometerKm - activeVehicle.initialOdometer - assignedKm))
+      : null;
 
   // wiersze tabeli: wpisy + (opcjonalnie) szare dni bez wyjazdu – tylko na ekranie, nie w eksporcie
   const todayIso = new Date().toISOString().slice(0, 10);
@@ -429,6 +433,8 @@ export const MileageLogView: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <PendingTrips />
 
       {/* Arkusz ewidencji */}
       <div className="card overflow-hidden">

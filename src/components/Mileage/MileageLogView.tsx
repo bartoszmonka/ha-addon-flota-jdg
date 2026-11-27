@@ -57,6 +57,7 @@ export const MileageLogView: React.FC = () => {
     reopenMonth,
     validationIssues,
     correctWithShift,
+    haLive,
   } = useFleet();
   const confirm = useConfirm();
 
@@ -120,6 +121,9 @@ export const MileageLogView: React.FC = () => {
   const totalMonthDistance = ledger?.totalDistanceKm ?? 0;
   const monthIssues = validationIssues.filter((i) => i.monthKey === currentMonthKey);
   const lastEntry = validEntries[validEntries.length - 1];
+  // km, które licznik (z Home Assistant) przejechał ponad ostatni wpis ewidencji
+  const unassignedKm =
+    haLive?.odometerKm != null && lastEntry ? Math.max(0, Math.round(haLive.odometerKm - lastEntry.odometerEnd)) : null;
 
   // wiersze tabeli: wpisy + (opcjonalnie) szare dni bez wyjazdu – tylko na ekranie, nie w eksporcie
   const todayIso = new Date().toISOString().slice(0, 10);
@@ -396,7 +400,18 @@ export const MileageLogView: React.FC = () => {
       </div>
 
       {/* Podsumowanie miesiąca */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${unassignedKm != null ? 'lg:grid-cols-5' : 'lg:grid-cols-4'}`}>
+        {unassignedKm != null && (
+          <div className={`card px-[18px] py-3.5 ${unassignedKm > 0 ? 'border-danger' : ''}`}>
+            <div className="text-[11px] font-semibold text-ink-3 uppercase tracking-wide">Nieprzypisane km</div>
+            <div className={`text-xl sm:text-[22px] font-num font-bold mt-0.5 ${unassignedKm > 0 ? 'text-danger' : ''}`}>
+              {fmtKm(unassignedKm)} km
+            </div>
+            <div className={`text-xs font-semibold ${unassignedKm > 0 ? 'text-danger' : 'text-ink-3'}`}>
+              {unassignedKm > 0 ? 'wymaga natychmiastowej ewidencji' : 'ewidencja zgodna z licznikiem'}
+            </div>
+          </div>
+        )}
         {[
           ['Stan na początek', `${fmtKm(startOdometer)} km`, 'z przeniesienia'],
           [

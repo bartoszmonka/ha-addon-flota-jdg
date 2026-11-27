@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFleet } from '../context/FleetContext';
-import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   FileSpreadsheet,
@@ -10,7 +9,6 @@ import {
   Plus,
   Car,
   ChevronsUpDown,
-  LogOut,
   Check,
   Menu,
   X,
@@ -114,13 +112,6 @@ const Logo: React.FC<{ dark?: boolean }> = ({ dark = true }) => (
 );
 
 const SidebarBody: React.FC<SidebarProps & { onNavigate?: () => void }> = ({ currentTab, onSelectTab, onOpenConfigurator, onNavigate }) => {
-  const { currentUser, logout } = useAuth();
-  const initials = (currentUser?.displayName || currentUser?.email || '?')
-    .split(/[\s@.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((s) => s[0]?.toUpperCase())
-    .join('');
   return (
     <div className="flex flex-col h-full gap-6 px-4 py-6">
       <div className="px-2">
@@ -149,21 +140,6 @@ const SidebarBody: React.FC<SidebarProps & { onNavigate?: () => void }> = ({ cur
           );
         })}
       </nav>
-      <div className="flex-1" />
-      <div className="flex items-center gap-2.5 px-2">
-        {currentUser?.photoURL ? (
-          <img src={currentUser.photoURL} alt="" referrerPolicy="no-referrer" className="w-9 h-9 rounded-full object-cover" />
-        ) : (
-          <div className="w-9 h-9 rounded-full bg-brand text-white flex items-center justify-center text-xs font-bold">{initials}</div>
-        )}
-        <div className="min-w-0 flex-1">
-          <div className="text-[13px] font-semibold text-white truncate">{currentUser?.displayName || 'Użytkownik HA'}</div>
-          <div className="text-[11px] text-side-text truncate">{currentUser?.email}</div>
-        </div>
-        <button onClick={logout} title="Wyloguj" className="p-2 rounded-lg text-side-text hover:text-white hover:bg-white/5">
-          <LogOut className="w-[18px] h-[18px]" />
-        </button>
-      </div>
     </div>
   );
 };
@@ -178,18 +154,12 @@ export const Sidebar: React.FC<SidebarProps> = (props) => (
 /** Pasek górny + dolne menu – widoczne na telefonie i tablecie */
 export const MobileChrome: React.FC<SidebarProps> = (props) => {
   const { currentTab, onSelectTab } = props;
-  const { currentUser } = useAuth();
   const [drawer, setDrawer] = useState(false);
   const tabs = NAV_ITEMS.slice(0, 3);
   return (
     <>
       <header className="lg:hidden sticky top-0 z-30 bg-canvas/90 backdrop-blur border-b border-line px-4 h-14 flex items-center justify-between">
         <Logo dark={false} />
-        {currentUser?.photoURL ? (
-          <img src={currentUser.photoURL} alt="" referrerPolicy="no-referrer" className="w-9 h-9 rounded-full object-cover" />
-        ) : (
-          <div className="w-9 h-9 rounded-full bg-brand" />
-        )}
       </header>
 
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-line px-3 pt-2 pb-[max(env(safe-area-inset-bottom),10px)] flex justify-between">

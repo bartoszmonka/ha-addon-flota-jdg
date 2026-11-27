@@ -1,5 +1,5 @@
 name: Flota JDG
-version: "1.0.1"
+version: "1.0.2"
 slug: flota_jdg
 description: Ewidencja przebiegu pojazdu (VAT-26) z danymi aut z Home Assistanta
 url: https://github.com/bartoszmonka/ha-addon-flota-jdg

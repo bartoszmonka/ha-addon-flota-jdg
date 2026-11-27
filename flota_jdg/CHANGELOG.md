@@ -1,5 +1,8 @@
 # Zmiany
 
+## 1.0.4
+- Czcionki wbudowane w aplikację (Plus Jakarta Sans z polskimi znakami) zamiast ładowania z Google Fonts; liczby w tej samej czcionce, z równą szerokością cyfr.
+
 ## 1.0.3
 - Automatyczne wykrywanie przejazdów z Home Assistanta (dom → pierwszy postój → dom). Nad arkuszem ewidencji pojawiają się przejazdy „do zatwierdzenia” z datą, trasą i km; wpisujesz tylko cel wyjazdu i zatwierdzasz lub odrzucasz.
 - „Nieprzypisane km” liczone jako licznik z HA minus km objęte wpisami – odrzucenie przejazdu tego nie zmienia.
